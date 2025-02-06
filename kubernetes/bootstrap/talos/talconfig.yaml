@@ -32,7 +32,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:6a:81:02"
+          hardwareAddr: "bc:24:11:2b:1c:9e"
         vlans:
           - vlanId: 25
             addresses:
@@ -52,7 +52,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:3c:20:eb"
+          hardwareAddr: "bc:24:11:2a:ad:3b"
         vlans:
           - vlanId: 25
             addresses:
@@ -72,7 +72,7 @@ nodes:
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:31:c7:b8"
+          hardwareAddr: "bc:24:11:0a:99:8c"
         vlans:
           - vlanId: 25
             addresses:
@@ -92,7 +92,7 @@ nodes:
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:c6:5e:76"
+          hardwareAddr: "bc:24:11:66:99:aa"
         vlans:
           - vlanId: 25
             addresses:
@@ -110,7 +110,7 @@ nodes:
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "bc:24:11:9c:a6:61"
+          hardwareAddr: "bc:24:11:d8:46:02"
         vlans:
           - vlanId: 25
             addresses:
