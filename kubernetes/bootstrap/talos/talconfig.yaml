@@ -1,0 +1,136 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/budimanjojo/talhelper/master/pkg/config/schemas/talconfig.json
+---
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.9.3
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.32.1
+
+clusterName: kubernetes
+endpoint: https://10.25.25.10:6443
+
+clusterPodNets:
+  - "10.244.0.0/16"
+clusterSvcNets:
+  - "10.96.0.0/12"
+
+additionalApiServerCertSans: &sans
+  - "10.25.25.10"
+  - "127.0.0.1"
+additionalMachineCertSans: *sans
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "talos-cp-01"
+    ipAddress: "10.25.25.11"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:6a:81:02"
+        vlans:
+          - vlanId: 25
+            addresses:
+              - "10.25.25.11/24"
+            mtu: 1500
+            routes:
+              - network: "0.0.0.0/0"
+                gateway: "10.25.25.1"
+            vip:
+              ip: "10.25.25.10"
+  - hostname: "talos-cp-02"
+    ipAddress: "10.25.25.12"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:3c:20:eb"
+        vlans:
+          - vlanId: 25
+            addresses:
+              - "10.25.25.12/24"
+            mtu: 1500
+            routes:
+              - network: "0.0.0.0/0"
+                gateway: "10.25.25.1"
+            vip:
+              ip: "10.25.25.10"
+  - hostname: "talos-cp-03"
+    ipAddress: "10.25.25.13"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:31:c7:b8"
+        vlans:
+          - vlanId: 25
+            addresses:
+              - "10.25.25.13/24"
+            mtu: 1500
+            routes:
+              - network: "0.0.0.0/0"
+                gateway: "10.25.25.1"
+            vip:
+              ip: "10.25.25.10"
+  - hostname: "talos-worker-01"
+    ipAddress: "10.25.25.21"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:c6:5e:76"
+        vlans:
+          - vlanId: 25
+            addresses:
+              - "10.25.25.21/24"
+            mtu: 1500
+            routes:
+              - network: "0.0.0.0/0"
+                gateway: "10.25.25.1"
+  - hostname: "talos-worker-02"
+    ipAddress: "10.25.25.22"
+    installDisk: "/dev/sda"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:9c:a6:61"
+        vlans:
+          - vlanId: 25
+            addresses:
+              - "10.25.25.22/24"
+            mtu: 1500
+            routes:
+              - network: "0.0.0.0/0"
+                gateway: "10.25.25.1"
+
+# Global patches
+patches:
+  - "@./patches/global/machine-files.yaml"
+  - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-network.yaml"
+  - "@./patches/global/machine-sysctls.yaml"
+  - "@./patches/global/machine-time.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/admission-controller-patch.yaml"
+    - "@./patches/controller/cluster.yaml"
+
